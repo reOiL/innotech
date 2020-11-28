@@ -14,8 +14,8 @@ class ScrappedData(models.Model):
         return str(self.id)
 
     data = models.JSONField(
-        max_length=262144,
-        default=lambda: {},
+        max_length=1048576,
+        default=dict,
         null=False,
         verbose_name=_("User data")
     )
