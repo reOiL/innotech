@@ -8,6 +8,15 @@
     <!-- bootstrap -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="js/bootstrap.min.js"></script>
+
+    <!-- jquery -->
+    <script src="js/jquery-3.5.1.min.js"></script>
+
+    <!-- работа со временем -->
+    <script src="js/moment.min.js"></script>
+
+    <!-- логика -->
+    <script src="js/index.js"></script>
 </head>
 <body>
     
@@ -37,7 +46,7 @@
                     После чего даст оценку финансового профиля.
                 </p>
                 <!-- Загрузка фото, отправка данных-->
-                <form action="/photo" method="POST" >
+                <form action="/photo" id="photoForm" method="POST" action="">
                     <input type="button"  class="btn btn-secondary" id="loadFileXml" value="Выбрать фото" onclick="document.getElementById('file').click();" />
                     <input type="file" style="display:none;" id="file"  name="photo" required accept="image/jpeg,image/png,image/gif"/>
         
@@ -46,76 +55,15 @@
             </div>
         </div>
 
-        <!-- Блок с оценкой -->
-        <br><br>
-        <h2>Заключение</h2>
-        <br>
-        <div class="card" style="width: 100%;">
-            <div class="card-body">
-                <h5 class="card-title">Оценка финансового профиля</h5>
-                <hr>
-                <!--<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
-                <p>
-                    Пупкин Василий Александрович 06.12.1991 г.р.
-                </p>
-                <h4>Рейтинг</h4>
-                <div class="progress" style="height: 20px;">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-                </div>
-                <br>
-                <h4 class="text-danger">Рекомендовано отказать в кредите</h4>
 
-                <!--------- 
-                Цвета полосы и заголовка, предлагаю так
-                0-40% класс danger
-                40-60% класс warning
-                60-100% класс success
-            
-                -->
-                
+        <div id="info">
 
-            </div>
         </div>
+        
 
-        <!-- Блоки с данными -->
-        <br><br>
-        <h2>Источники данных</h2>
-        <br>
-        <div class="card" style="width: 100%;">
-            <div class="card-body">
-                <h5 class="card-title">ВК</h5>
-                <hr>
-                <!--<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
-                <div class="media">
-                    <img height="64px" width="64px" src="https://sun9-60.userapi.com/impg/O0SSg6xjVQiM0OFgdD3ZVnp2dMQbGxnRrkFkiA/-nUD8qYD3Nk.jpg?size=1214x2160&quality=96&proxy=1&sign=aa73f767ca17f444c17a23b8b909f0cc" class="mr-3" alt="...">
-                    <div class="media-body">
-                      <h5 class="mt-0">Василий Пупкин</h5>
-                      Мужчина, 27 лет <a href="vk.com">VK</a>
-                    </div>
-                  </div>
 
-            </div>
-        </div>
 
-        <br>
-        <div class="card" style="width: 100%;">
-            <div class="card-body">
-                <h5 class="card-title">ЕГРЮЛ</h5>
-                <hr>
-                <!--<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
-                
-                <p>
-                    Пупкин Василий Александрович 06.12.1991 г.р.
-                </p>
-                <p>
-                    ООО "развод" была ликвидирована 01.02.2017
-                </p>
-                <p>
-                    ООО "лохотрон" была ликвидирована 01.02.2017
-                </p>
 
-            </div>
-        </div>
     </div>
 
     

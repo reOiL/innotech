@@ -1,0 +1,13 @@
+{
+   
+    "fullName"    : "Иванов Иван Иванович",
+    "birthday"    : "20.08.1991",
+    "sex"         : "м",
+    "vkId"        : "ivanovivanich",
+    "vkPath"      : "https://vk.com/",
+    "rating"      : 25,
+    "recomm"      : "Не выдавать кредит",
+    "recommColor" : "danger",
+    "photo"       : "https://sun9-60.userapi.com/impg/O0SSg6xjVQiM0OFgdD3ZVnp2dMQbGxnRrkFkiA/-nUD8qYD3Nk.jpg?size=1214x2160&quality=96&proxy=1&sign=aa73f767ca17f444c17a23b8b909f0cc"
+    
+}
