@@ -32,8 +32,15 @@ class VkScrapping(Scrapping):
         ret['profile.status'] = self.get_custom_data('class', 'profile_deleted_text', 'text', 'Open')
         if ret['profile.status'] != 'Open':
             return ret
-        ret['profile.photo'] = self.get_custom_data('class', 'page_avatar_img', 'screenshot_as_base64', None)
+        try:
+            self.click(self.find_element_by_class_name('profile_label_more'))
+        except Exception:
+            pass
+        # ret['profile.photo'] = self.get_custom_data('class', 'page_avatar_img', 'screenshot_as_base64', None)
         ret['profile.photo_url'] = self.get_custom_data('class', 'page_avatar_img', 'get_property', lambda x: x)('src')
+        commons = self.get_custom_data('id', 'profile_short', 'text', '').replace(':\n', '=').split('\n')
+        ret['profile.common'] = {common.split('=')[0]: common.split('=')[1]
+                                 for common in commons if len(common.split('=')) == 2}
         return ret
 
 
@@ -42,9 +49,14 @@ def test_vk_scrapper():
         '404',
         'o_scherbakova',
         'metnesmaxim',
+        'id1',
+        'id497220564',
+        'id234232',
+        'id497220532'
     ]
     vk = VkScrapping()
     for p in profiles:
         data = vk.invoke(p)
         print(data)
     vk.close()
+
