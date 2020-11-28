@@ -1,0 +1,50 @@
+from scraplenium.scrapping import Scrapping
+from scraplenium.utils import img_to_base
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.by import By
+
+
+class VkScrapping(Scrapping):
+    def get_custom_data(self, selector, query, field, default):
+        if selector not in self.selectors:
+            raise ValueError("Undefined selector")
+        try:
+            return getattr(self.selectors[selector](query), field, default)
+        except Exception:
+            return default
+
+    def get_profile_status(self):
+        els = self.find_elements_by_class_name('profile_deleted_text')
+        if not els:
+            return 'Open', True
+        return els[0].text, False
+
+    def invoke(self, _id):
+        ret = {
+            'url': f'https://vk.com/{_id}',
+        }
+        self.get(ret['url'])
+        self.until(3, ec.presence_of_element_located((By.TAG_NAME, 'body')))
+        if self.title == '404 Not Found':
+            ret['profile.status'] = 'Not exist'
+            return ret
+        ret['profile.name'] = self.get_custom_data('class', 'page_name', 'text', False)
+        ret['profile.status'] = self.get_custom_data('class', 'profile_deleted_text', 'text', 'Open')
+        if ret['profile.status'] != 'Open':
+            return ret
+        ret['profile.photo'] = self.get_custom_data('class', 'page_avatar_img', 'screenshot_as_base64', None)
+        ret['profile.photo_url'] = self.get_custom_data('class', 'page_avatar_img', 'get_property', lambda x: x)('src')
+        return ret
+
+
+def test_vk_scrapper():
+    profiles = [
+        '404',
+        'o_scherbakova',
+        'metnesmaxim',
+    ]
+    vk = VkScrapping()
+    for p in profiles:
+        data = vk.invoke(p)
+        print(data)
+    vk.close()
