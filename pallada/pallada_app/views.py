@@ -1,4 +1,5 @@
 import json
+import os
 
 from django.http import JsonResponse, HttpResponse
 from . import forms
@@ -33,6 +34,7 @@ def check(request, _id):
     class Wrap:
         def __init__(self):
             self.vk = VkScrapping()
+            self.vk.login(os.environ.get('VK_LOG'), os.environ.get('VK_PAS'))
             self.vk.invoke(_id)
 
         def __call__(self, *args, **kwargs):
@@ -47,9 +49,9 @@ def check(request, _id):
         pass
     data = Wrap()()
     naming = data['profile.name'].split(' ')
-    company = fns.fetch_all(fns.find_info, '+'.join(naming), '8177bb90c97173f012bced74661c17467b8f69e2')
+    company = fns.fetch_all(fns.find_info, '+'.join(naming), os.environ.get('FNS_TOKEN'))
     if not company['items'] and len(naming) >= 2:
-        company = fns.fetch_all(fns.find_info, naming[1], '8177bb90c97173f012bced74661c17467b8f69e2')
+        company = fns.fetch_all(fns.find_info, naming[1],  os.environ.get('FNS_TOKEN'))
 
     company_out = [d for l in [[x[y] for y in x] for x in company['items']] for d in l]
     df = pd.DataFrame(company_out)

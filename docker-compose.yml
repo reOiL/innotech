@@ -13,3 +13,5 @@ services:
       context: pallada
       dockerfile: Dockerfile
     restart: always
+    env_file:
+      - .env

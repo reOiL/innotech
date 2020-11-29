@@ -1,3 +1,5 @@
+import os
+
 from scraplenium.scrapping import Scrapping
 from scraplenium.utils import img_to_base
 from selenium.webdriver.support import expected_conditions as ec
@@ -18,6 +20,12 @@ class VkScrapping(Scrapping):
         if not els:
             return 'Open', True
         return els[0].text, False
+
+    def login(self, log, pas):
+        self.get('https://vk.com/')
+        self.find_element_by_id('index_email').send_keys(log)
+        self.find_element_by_id('index_pass').send_keys(pas)
+        self.click(self.find_element_by_id('index_login_button'))
 
     def invoke(self, _id):
         ret = {
@@ -55,6 +63,7 @@ def test_vk_scrapper():
         'id497220532'
     ]
     vk = VkScrapping()
+    vk.login(os.environ.get('VK_LOG'), os.environ.get('VK_PAS'))
     for p in profiles:
         data = vk.invoke(p)
         print(data)
