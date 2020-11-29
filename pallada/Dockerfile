@@ -5,7 +5,8 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -y && \
     apt-get upgrade -y && \
-    apt-get install -y python-dev libpq-dev libssl-dev nmap
+    apt-get install -y python-dev libpq-dev libssl-dev packagekit-gtk3-module \
+    libx11-xcb1 libdbus-glib-1-2
 
 RUN wget -O ~/FirefoxSetup.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64"
 RUN tar xjf ~/FirefoxSetup.tar.bz2 -C /opt/
