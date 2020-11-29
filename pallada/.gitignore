@@ -284,3 +284,4 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/python,macos,linux,windows,django
 .idea/
 scraplenium/geckodrivers/
+/geckodrivers/geckodriver_Darwin_x86_64/

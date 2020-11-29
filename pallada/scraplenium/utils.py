@@ -25,9 +25,9 @@ def download_geckodriver():
     system = platform.system()
     arch = platform.machine()
     driver_name = f'geckodriver_{system}_{arch}'
-    g_GeckoDriver = driver_path = os.path.join(os.getcwd(), CFG.GECKODRIVER_PATH, driver_name, 'geckodriver')
-    return g_GeckoDriver
-    if os.path.exists(driver_path) and os.path.isfile(driver_path):
+    driver_path = os.path.join(os.getcwd(), CFG.GECKODRIVER_PATH, driver_name)
+    g_GeckoDriver = os.path.join(driver_path, 'geckodriver')
+    if os.path.exists(driver_path):
         return g_GeckoDriver
     if not os.path.exists(CFG.GECKODRIVER_PATH):
         os.mkdir(CFG.GECKODRIVER_PATH)

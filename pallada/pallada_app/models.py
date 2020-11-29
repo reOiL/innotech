@@ -13,8 +13,13 @@ class ScrappedData(models.Model):
     def __str__(self):
         return str(self.id)
 
-    data = models.JSONField(
-        max_length=1048576,
+    social_id = models.CharField(
+        max_length=255,
+        verbose_name=_("Social id for user")
+    )
+
+    data = models.TextField(
+        # max_length=1048576,
         default=dict,
         null=False,
         verbose_name=_("User data")
