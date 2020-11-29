@@ -9,6 +9,8 @@ class Scrapping(Firefox):
 
     def __init__(self, *args, **kwargs):
         path = download_geckodriver()
+        if not path:
+            raise ValueError("Failed download driver!")
         super(Scrapping, self).__init__(executable_path=path, *args, **kwargs)
         self.selectors = {
             'class': self.find_element_by_class_name,
