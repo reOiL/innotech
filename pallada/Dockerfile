@@ -14,6 +14,7 @@ RUN mkdir -p /usr/lib/firefox/
 RUN ln -s /opt/firefox/firefox /usr/lib/firefox/firefox
 
 WORKDIR /app/
+RUN apt-get instal -y cmake gcc g++
 
 # Copy requirement files
 COPY requirements.txt /app

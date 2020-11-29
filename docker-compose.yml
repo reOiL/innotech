@@ -15,3 +15,5 @@ services:
     restart: always
     env_file:
       - .env
+    volumes:
+      - ./simples/:/app/media/simples/

@@ -1,33 +1,34 @@
 import json
 import os
 
+from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse, HttpResponse
 from . import forms
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 from scraplenium.parser import VkScrapping
 from apiboost import fns
-import Levenshtein
 import pandas as pd
 from .models import ScrappedData
+
+from .facerec import FaceRec
+face_reg = None
 
 
 @csrf_exempt
 def upload(request):
     if request.method != 'POST':
-        return JsonResponse({})
-    form = forms.UploadForm(request.POST)
-    if not form.is_valid():
-        return JsonResponse({'data': form.errors})
-    return JsonResponse({})
-
-
-def lev_dist(w, b):
-    ret = 0
-    for kw in w:
-        for kb in b:
-            Levenshtein.distance(kw, kb)
-    return ret // len(w) + len(b)
+        return JsonResponse({'Error': 'Invalid method'})
+    global face_reg
+    if not face_reg:
+        face_reg = FaceRec()
+    myfile = request.FILES['photo']
+    fs = FileSystemStorage()  # defaults to   MEDIA_ROOT
+    filename = fs.save(myfile.name, myfile)
+    _id = face_reg.recognize(filename)
+    if not _id:
+        return JsonResponse({'Error': 'not exist!'})
+    return check(request, _id)
 
 
 def check(request, _id):
@@ -51,24 +52,12 @@ def check(request, _id):
     naming = data['profile.name'].split(' ')
     company = fns.fetch_all(fns.find_info, '+'.join(naming), os.environ.get('FNS_TOKEN'))
     if not company['items'] and len(naming) >= 2:
-        company = fns.fetch_all(fns.find_info, naming[1],  os.environ.get('FNS_TOKEN'))
+        company = fns.fetch_all(fns.find_info, naming[1], os.environ.get('FNS_TOKEN'))
 
     company_out = [d for l in [[x[y] for y in x] for x in company['items']] for d in l]
     df = pd.DataFrame(company_out)
     if 'profile.common' in data and 'Город' in data['profile.common']:
         df = df[df['АдресПолн'].str.contains(data['profile.common']['Город'].capitalize())]
-    # for item in company['items']:
-    #     for d in item:
-    #         dist = 100
-    #         if 'ФИОПолн' in item[d]:
-    #             dist = lev_dist(naming, item[d]['ФИОПолн'].split(' '))
-    #             # Levenshtein.distance(' '.join(naming), item[d]['ФИОПолн'])
-    #         elif 'ГдеНайдено' in item[d]:
-    #             # dist = Levenshtein.distance(' '.join(naming), item[d]['ГдеНайдено'])
-    #             dist = lev_dist(naming, item[d]['ГдеНайдено'].split(' '))
-    #         # print(dist, item[d])
-    #         if dist < 50:
-    #             company_out.append(item[d])
     ret = {
         'vk': data,
         'nalog': {
