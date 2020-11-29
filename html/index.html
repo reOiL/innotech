@@ -46,7 +46,7 @@
                     После чего даст оценку финансового профиля.
                 </p>
                 <!-- Загрузка фото, отправка данных-->
-                <form action="/photo" id="photoForm" method="POST" action="">
+                <form id="photoForm" action="/api/upload">
                     <input type="button"  class="btn btn-secondary" id="loadFileXml" value="Выбрать фото" onclick="document.getElementById('file').click();" />
                     <input type="file" style="display:none;" id="file"  name="photo" required accept="image/jpeg,image/png,image/gif"/>
         

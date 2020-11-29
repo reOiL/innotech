@@ -3,30 +3,83 @@ $(document).ready(()=>{
 
 
 /////////////////// отправка формы //////////////////////// 
-$("#photoForm").submit(function(){
-    // отправляем
-    $.post(
-        '/api/upload', 
-         $("#photoForm").serialize(), // отправляемые данные          
-        
-        render(data) // передаем полученные данные дальше
-    );
-    
-    // блокируем отправку формы
-    return false;
-});
+$("#photoForm").on('submit',(function(e) {
+    e.preventDefault(); // делаем отмену действия браузера и формируем ajax
+    var formData = new FormData($('#photoForm')[0]);
+    // данные с формы завернем в переменную для ajax
+
+    $.ajax({
+        type:'POST', // тип запроса
+        url: $(this).attr('action'), // куда будем отправлять, можно явно указать
+        data:formData, // данные, которые передаем
+        cache:false, // кэш и прочие настройки писать именно так (для файлов)
+        // (связано это с кодировкой и всякой лабудой)
+        contentType: false, // нужно указать тип контента false для картинки(файла)
+        processData: false, // для передачи картинки(файла) нужно false 
+        success:function(data){ // в случае успешного завершения
+            console.log("Завершилось успешно"); // выведем в консоли успех 
+            console.log(data); // и что в ответе получили, если там что-то есть
+        },
+        error: function(data){ // в случае провала
+            console.log("Завершилось с ошибкой"); // сообщение об ошибке
+            console.log(data); // и данные по ошибке в том числе
+        }
+    });
+}))
+
+
+// render({
+//     "vk": {
+//         "url": "https://vk.com/silantevdenis",
+//         "profile.status": "Open",
+//         "profile.photo_url": "https://sun6-21.userapi.com/impf/c845418/v845418828/12d0b3/EK7eNuy-hkc.jpg?size=200x0&quality=90&crop=934,832,711,711&sign=2cd3ed785fd2562c0c5a28ba51fb8506&ava=1",
+//         "profile.common": {
+//           "Birthday": "August 30, 1997",
+//           "Current city": "Moscow",
+//           "Relationship": "Married",
+//           "Institution": "МАИ"
+//         }
+//       },
+//     "nalog": {
+//       "company": [
+//         {
+//           "ИНН": "7453274002",
+//           "ОГРН": "1147453010693",
+//           "НаимСокрЮЛ": "ООО \"ИСС\"",
+//           "НаимПолнЮЛ": "ООО \"ИС-СЕРВИС\"",
+//           "ДатаОГРН": "2014-10-14",
+//           "Статус": "Действующее",
+//           "АдресПолн": "обл. Челябинская, г. Челябинск, ул. Сони Кривой, д.38, оф.50",
+//           "ОснВидДеят": "Торговля оптовая зерном, необработанным табаком, семенами и кормами для сельскохозяйственных животных",
+//           "ГдеНайдено": "ФИО бывшего учредителя (Варламов Илья Сергеевич, ИННФЛ: 744716492605)",
+//           "ДатаПрекр": NaN,
+//           "ФИОПолн": NaN
+//         },
+//         {
+//           "ИНН": "7451431122",
+//           "ОГРН": "1177456105221",
+//           "НаимСокрЮЛ": "ООО \"МСК\"",
+//           "НаимПолнЮЛ": "ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ \"МСК\"",
+//           "ДатаОГРН": "2017-12-19",
+//           "Статус": "Действующее",
+//           "АдресПолн": "обл. Челябинская, г. Челябинск, ул. Курчатова, д.2, пом.8",
+//           "ОснВидДеят": "Деятельность вспомогательная прочая, связанная с перевозками",
+//           "ГдеНайдено": "ФИО учредителя (Варламов Илья Сергеевич, ИННФЛ: 744716492605)",
+//           "ДатаПрекр": NaN,
+//           "ФИОПолн": NaN
+//         }
+//       ]
+//     }
+//   })
 
 
 
 //////////////// вставляем карточки ///
 function render(data){
+    //////////////// проверка данных 
+    // общая проверка
+    if(data.length < 1){ alert("Сервер прислал пустые данные"); return false;}
 
-    // немного проверяем данные
-    if(data.length < 1){
-        alert("Сервер прислал пустые данные");
-
-        return false;
-    }
 
     ///////////////////  формируем html 
     const recomm = `
@@ -40,7 +93,7 @@ function render(data){
                 <hr>
                 <!--<h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>-->
                 <p>
-                    `+data.fullName+` `+data.birthday+` г.р.
+                    `+data.vk["profile.name"]+` `+data.vk["profile.common"].Birthday+` 
                 </p>
                 <h4>Рейтинг</h4>
                 <div class="progress" style="height: 20px;">
@@ -65,9 +118,9 @@ function render(data){
                 <div class="media">
                     <img height="64px" width="64px" src="`+data.photo+`" class="mr-3" alt="...">
                     <div class="media-body">
-                        <h5 class="mt-0">`+data.fullName+`</h5>
+                        <h5 class="mt-0">`+data.vk["profile.name"]+`</h5>
                         `+data.sex+`, `+ moment().diff(moment(data.birthday, 'DD.MM.YYYY'), 'years') +` лет 
-                        <a href="`+data.vkPath+data.vkId+`" target="_blank">VK</a>
+                        <a href="`+data.vk.url+`" target="_blank">Страница в VK</a>
                     </div>
                 </div>
 
