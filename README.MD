@@ -5,7 +5,7 @@ Linux:
 ```shell script
 sudo su
 apt-get install -y docker docker-compose
-at << EOF > .env
+cat << EOF > .env
 VK_LOG='<Ваш логин в вк>'
 VK_PAS='<Ваш пароль в вк>'
 FNS_TOKEN='<Токен налоговой службый>'
