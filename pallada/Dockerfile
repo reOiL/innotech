@@ -7,6 +7,11 @@ RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get install -y python-dev libpq-dev libssl-dev nmap
 
+RUN wget -O ~/FirefoxSetup.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64"
+RUN tar xjf ~/FirefoxSetup.tar.bz2 -C /opt/
+RUN mkdir -p /usr/lib/firefox/
+RUN ln -s /opt/firefox/firefox /usr/lib/firefox/firefox
+
 WORKDIR /app/
 
 # Copy requirement files

@@ -1,5 +1,7 @@
 import abc
 
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+
 from .utils import rep_operation, download_geckodriver
 from selenium.webdriver import Firefox
 from selenium.webdriver.support.wait import WebDriverWait
@@ -11,7 +13,10 @@ class Scrapping(Firefox):
         path = download_geckodriver()
         if not path:
             raise ValueError("Failed download driver!")
-        super(Scrapping, self).__init__(executable_path=path, *args, **kwargs)
+        super(Scrapping, self).__init__(
+            firefox_binary=FirefoxBinary('/opt/firefox/firefox'),
+            executable_path=path, *args, **kwargs
+        )
         self.selectors = {
             'class': self.find_element_by_class_name,
             'id': self.find_element_by_id,
